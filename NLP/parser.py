@@ -278,7 +278,6 @@ class Parse:
       del word_list[0]
       if preposition:
         new_action = cmd + " " + preposition
-        print("new action: ", new_action)
         if new_action in self.verbs:
           cmd = self.verbs[new_action]
           del word_list[0]
