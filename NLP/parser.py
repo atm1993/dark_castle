@@ -19,6 +19,7 @@ class Parse:
                   "inventory":"inventory",
                   "look at":"look at",
                   "look under":"look under",
+                  "look":"look",
                   "move":"go", 
                   "munch":"eat", 
                   "open":"open", 
