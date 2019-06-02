@@ -12,11 +12,12 @@ class Parse:
                   "drop":"drop",
                   "eat":"eat", 
                   "enter":"enter", 
+                  "exit":"quit",
                   "get":"get", 
                   "go":"go", 
-                  "grab":"grab",
-                  "help":"help",
-                  "inventory":"inventory",
+                  "grab":"grab", 
+                  "leave":"quit", 
+                  "look":"look",
                   "look at":"look at",
                   "look under":"look under",
                   "move":"go", 
@@ -24,7 +25,6 @@ class Parse:
                   "open":"open", 
                   "pick up":"pick up",
                   "pick":"pick up",
-                  "pickupObjects":"pickupObjects",
                   "play":"play", 
                   "push":"push",
                   "q":"quit",
@@ -109,8 +109,8 @@ class Parse:
     "deadtulip":"dead_tulip",
     "desk":"desk",
     "dirt_mound":"dirt_mound",
-    "dirt mound":"dirt_mound",
-    "dirt_mound":"dirt_mound",
+    "dir mound":"dirt_mound",
+    "dir_mound":"dirt_mound",
     "dresser":"dresser",
     "garden":"garden",
     "grave":"grave",
@@ -151,63 +151,42 @@ class Parse:
                         "off", "on", "onto", "out", "outside", "over", "past","since", "through", "to", "top", 
                         "toward", "under", "underneath", "until", "up", "upon", "with", "within", "without"]
 
-    self.rooms = {
-                  "bailey":"bailey",
-                  "Bailey":"bailey",
+    self.rooms = {"bailey":"bailey",
                   "ballroom":"ballroom",
-                  "Ballroom":"ballroom",
                   "barracks":"barracks",
-                  "Barracks":"Barracks",
-                  "Castle Gate":"castle_gate",
-                  "castle gate":"castle_gate",
-                  "castlegate":"castle_gate",
                   "castle_gate":"castle_gate",
                   "chapel":"chapel",
-                  "Chapel":"chapel",
                   "dungeon":"dungeon",
-                  "Dungeon":"dungeon",
-                  "Great Hall":"great_hall",
                   "great hall":"great_hall",
                   "great_hall":"great_hall",
                   "greathall":"great_hall",
-                  "Guard House":"guard_house",
                   "guard house":"guard_house",
                   "guard_house":"guard_house",
                   "guardhouse":"guard_house",
-                  "Hidden Chamber":"hidden_chamber",
                   "hidden chamber":"hidden_chamber",
                   "hidden_chamber":"hidden_chamber",
                   "hiddenchamber":"hidden_chamber",
-                  "Kings Bedchambers":"kings_bedchambers",
-                  "kings bedchambers":"kings_bedchambers",
                   "kings bed chambers":"kings_bedchambers",
-                  "kings_bedchambers":"kings_bedchambers",
-                  "kingsbedchambers":"kings_bedchambers",
-                  "Kings Gardens":"kings_gardens",
+                  "kings bedchambers":"kings_bedchambers",
                   "kings gardens":"kings_gardens",
+                  "kings_bedchambers":"kings_bedchambers",
                   "kings_gardens":"kings_gardens",
+                  "kingsbedchambers":"kings_bedchambers",
                   "kingsgardens":"kings_gardens",
-                  "Kitchen":"kitchen",
                   "kitchen":"kitchen",
-                  "Library":"library",
                   "library":"library",
-                  "Moat":"moat",
                   "moat":"moat",
-                  "Observatory":"observatory",
                   "observatory":"observatory",
-                  "Scribes Room":"scribes_room",
                   "scribes room":"scribes_room",
                   "scribes_room":"scribes_room",
                   "scribesroom":"scribes_room",
                   "servants quarters":"servants_quarters",
-                  "Servants Quarters":"servants_quarters",
                   "servants_quarters":"servants_quarters",
                   "servantsquarters":"servants_quarters",
-                  "Throne Room":"throne_room",
+                  "testroom":"testroom",
                   "throne room":"throne_room",
                   "throne_room":"throne_room",
                   "throneroom":"throne_room",
-                  "Wine Cellar":"wine_cellar",
                   "wine cellar":"wine_cellar",
                   "wine_cellar":"wine_cellar",
                   "winecellar":"wine_cellar",
@@ -224,13 +203,13 @@ class Parse:
       return None, None, None, None, None
     
     cmd = self.get_command_prompt(word_list)
-
-    if len(word_list) == 0:
+    if cmd is None and len(word_list) == 0:
       return None, None, None, None, None
-
+    
     if cmd is None:
       cmd = "go"
-    elif cmd == "go":
+    if cmd == "go":
+
       cardinal_direction = self.get_direction(word_list)
       room = self.match_noun(word_list, self.rooms)
 
@@ -241,6 +220,9 @@ class Parse:
         return cmd, room, None, None, None
 
       if cardinal_direction and room:
+        return None, None, None, None, None
+      
+      if cardinal_direction is None and room is None:
         return None, None, None, None, None
 
     objects = self.match_noun(word_list, self.objects)
@@ -255,7 +237,7 @@ class Parse:
       
       for index in range(number_of_user_input_elements):
         if new_word_list == user_input_list[index:(index + len(new_word_list))]:
-          return " ".join(new_word_list)
+          return "_".join(new_word_list)
     
     return None
 
@@ -271,14 +253,12 @@ class Parse:
     preposition = None
     if len(word_list) > 1:
       preposition = self.match_noun([word_list[1]], self.prepositions)
-      print("prep: ", preposition)
 
     if word_list[0] in self.verbs:
       cmd = self.verbs[word_list[0]]
       del word_list[0]
       if preposition:
         new_action = cmd + " " + preposition
-        print("new action: ", new_action)
         if new_action in self.verbs:
           cmd = self.verbs[new_action]
           del word_list[0]
@@ -305,17 +285,17 @@ class Parse:
     else:
       return False
 
-def main():
-  parser = Parse()
-  while True:
-    prompt = input("What Move Would You Like to Do? ")
-    if prompt ==  "q":
-      break
-    action, room, direction, room_item, objects = parser.parse_user_input(prompt)
-    print("This is the action: ", action)
-    print("This is the direction: ", direction)
-    print("This is the room: ", room) 
-    print("This is the room_item: ", room_item) 
-    print("This is the object: ", objects) 
+# def main():
+#   parser = Parse()
+#   while True:
+#     prompt = input("What Move Would You Like to Do? ")
+#     if prompt ==  "q":
+#       break
+#     action, room, direction, room_item, objects = parser.parse_user_input(prompt)
+#     print("This is the action: ", action)
+#     print("This is the direction: ", direction)
+#     print("This is the room: ", room) 
+#     print("This is the room_item: ", room_item) 
+#     print("This is the object: ", objects) 
 
-main()
+# main()
