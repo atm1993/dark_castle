@@ -7,4 +7,4 @@ east: none
 west: barracks
 visited: False
 features: skeleton, cell_door
-pickupObjects:
+pickupObjects: mirror

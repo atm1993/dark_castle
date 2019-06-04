@@ -7,4 +7,4 @@ east: chapel
 west: throne_room
 visited: False
 features: chess_board, scroll
-pickupObjects: mirror
+pickupObjects:

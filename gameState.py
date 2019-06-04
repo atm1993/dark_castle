@@ -128,3 +128,17 @@ class gameState:
             self.saveGame()
         else:
             return -1
+
+    def checkHiddenChamberStatus(self):
+        gamePath = './saved_games/' + self.name +'/game_state.txt'
+        if os.path.exists(gamePath) == False:
+            return -1
+        if self.currentRoom.name == 'throne_room':
+            counter = 0
+            for x in self.inventory:
+                if x.name == 'mirror' or x.name == 'jeweled_pendant' or x.name == 'royal_crown':
+                    counter = counter + 1
+            if counter == 3:
+                return 1
+        else:
+            return -1
