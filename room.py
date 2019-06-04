@@ -73,9 +73,7 @@ class Room:
             outputRoom.write(data)
             self.visited = True
 
-myRoom = Room()
 
-myRoom.loadRoom('alex', 'testroom')
 
 
 
