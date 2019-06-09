@@ -284,18 +284,3 @@ class Parse:
       return True
     else:
       return False
-
-# def main():
-#   parser = Parse()
-#   while True:
-#     prompt = input("What Move Would You Like to Do? ")
-#     if prompt ==  "q":
-#       break
-#     action, room, direction, room_item, objects = parser.parse_user_input(prompt)
-#     print("This is the action: ", action)
-#     print("This is the direction: ", direction)
-#     print("This is the room: ", room) 
-#     print("This is the room_item: ", room_item) 
-#     print("This is the object: ", objects) 
-
-# main()
